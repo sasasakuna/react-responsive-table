@@ -1,17 +1,33 @@
-table {
+.table {
   margin: 0 auto;
-  width: 100%;
+  width: 768px;
+
   text-align: center;
+  white-space: nowrap;
+  z-index: 1;
 }
 
-thead {
+.thead {
+  z-index: 9999;
+  position: absolute;
+  top: 0;
+}
+
+.thead .td {
   background: #54B2DE;
 }
 
-tbody tr:nth-child(even) {
-  background: #ccc;
+.tbody {
+  height: 128px;
+  margin-top: 18px;
+  overflow: auto;
 }
 
-@media screen and (max-width: 1024px) {
+.td {
+  display: inline-block;
+  min-width: 100px;
+}
 
+.tbody .tr:nth-child(even) .td {
+  background: #ccc;
 }
