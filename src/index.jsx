@@ -16,25 +16,43 @@ class ReactResponsiveTable extends React.Component {
              {a: '1', b: '2', c: '3', d: '4', e: '5', f: '6', g: '7', h: '8888888888', i: '9', j: '10'},
              {a: '1', b: '2', c: '3', d: '4', e: '5', f: '6', g: '7', h: '8', i: '9999999999', j: '10'},
              {a: '1', b: '2', c: '3', d: '4', e: '5', f: '6', g: '7', h: '8', i: '9', j: '10101010101010101'}],
-     style: {}
+     style: {transform: 'translate3d(0px, 0px, 0px)'},
+     theadWidth: {width: '1424px'}
     }
     this._handleScroll = this._handleScroll.bind(this)
+    this._handleResize = this._handleResize.bind(this)
+  }
+
+  _handleResize () {
+    console.log('resize...')
+    // let theadWidth = ReactDOM.findDOMNode(this.refs.scrollableBody).width
+    // let tmp = {
+    //   width: theadWidth + 'px'
+    // }
+    // this.setState({theadWidth: tmp});
   }
 
   ComponentDidMount () {
+    console.log('ComponentDidMount...')
+    let theadWidth = ReactDOM.findDOMNode(this.refs.scrollableBody).width
+    console.log('theadWidth: ', theadWidth)
+    this.setState({theadWidth: theadWidth})
+    window.addEventListener('resize', this._handleResize);
+  }
 
+  componentWillUnmount () {
+      window.removeEventListener('resize', this._handleResize)
   }
 
   _handleScroll(event) {
-
-    console.log(ReactDOM.findDOMNode(this.refs.scrollableBody))
-    console.log('ReactDOM.findDOMNode(this).scrollLeft: ', ReactDOM.findDOMNode(this.refs.scrollableBody).scrollLeft)
-    console.log('ReactDOM.findDOMNode(this).scrollTop: ', ReactDOM.findDOMNode(this.refs.scrollableBody).scrollTop)
-    // console.log('ReactDOM.findDOMNode(this).offsetTop: ', ReactDOM.findDOMNode(this.refs.scrollableBody).offsetTop)
-    // console.log('ReactDOM.findDOMNode(this).offsetLeft: ', ReactDOM.findDOMNode(this.refs.scrollableBody).offsetLeft)
-
     let left = ReactDOM.findDOMNode(this.refs.scrollableBody).scrollLeft
-    this.state.style.transform = 'translate3d' + '('+ left + 'px' + ',' + '0px' + ',' + '0px' + ')';
+    let tmp = {
+      transform: 'translate3d' + '('+ -left + 'px' + ',' + '0px' + ',' + '0px' + ')'
+    }
+    console.log('tmp: ', tmp)
+    this.setState({
+      style: tmp
+    })
   }
 
   render() {
@@ -56,9 +74,9 @@ class ReactResponsiveTable extends React.Component {
       )
     })
     return (
-      <div className="table">
-        <div className="thead" style={state.style}>
-          <div className="tr">
+      <div className="table" style={{'maxWidth': '1424px'}}>
+        <div className="thead" style={state.theadWidth}>
+          <div className="tr" style={state.style}>
             <div className="td">1</div>
             <div className="td">2</div>
             <div className="td">3</div>

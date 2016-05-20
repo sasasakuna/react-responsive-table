@@ -1,13 +1,12 @@
 .table {
   margin: 0 auto;
-  width: 768px;
-
   text-align: center;
   white-space: nowrap;
   z-index: 1;
 }
 
 .thead {
+  overflow: hidden;
   z-index: 9999;
   position: absolute;
   top: 0;
