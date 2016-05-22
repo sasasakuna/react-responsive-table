@@ -2,6 +2,60 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import './main.scss'
 
+class Table extends React.Component {
+  render() {
+    return (
+      <div className="table" style={{maxWidth: this.props.width}}>
+        {this.props.children}
+      </div>
+    )
+  }
+}
+
+class Thead extends React.Component {
+  render() {
+    return (
+      <div className="thead">
+        {this.props.children}
+      </div>
+    )
+  }
+}
+
+class Tbody extends React.Component {
+  render() {
+    var self = this
+    var rows = this.props.dataSet.map(function(data, index){
+      const childrenWithProps = React.Children.map(self.props.children,
+        (child) => React.cloneElement(child, {
+          data: data
+        })
+      )
+      return (
+        <div key={index} className="tr" data={data}>
+          {childrenWithProps}
+        </div>
+      )
+    })
+    return (
+      <div className="tbody">
+        {rows}
+      </div>
+    )
+  }
+}
+
+
+class Column extends React.Component {
+  render() {
+    return (
+      <div className="td" style={{width: this.props.width}} dataKey={this.props.dataKey}>
+        {this.props.data[this.props.dataKey]}
+      </div>
+    )
+  }
+}
+
 class ReactResponsiveTable extends React.Component {
   constructor(props) {
     super(props)
@@ -17,27 +71,23 @@ class ReactResponsiveTable extends React.Component {
              {a: '1', b: '2', c: '3', d: '4', e: '5', f: '6', g: '7', h: '8', i: '9999999999', j: '10'},
              {a: '1', b: '2', c: '3', d: '4', e: '5', f: '6', g: '7', h: '8', i: '9', j: '10101010101010101'}],
      style: {transform: 'translate3d(0px, 0px, 0px)'},
-     theadWidth: {width: '1424px'}
+     theadWidth: {width: this.props.width}
     }
     this._handleScroll = this._handleScroll.bind(this)
     this._handleResize = this._handleResize.bind(this)
   }
 
   _handleResize () {
-    console.log('resize...')
-    // let theadWidth = ReactDOM.findDOMNode(this.refs.scrollableBody).width
+    // let theadWidth = ReactDOM.findDOMNode(this.refs.scrollableBody).offsetWidth
     // let tmp = {
     //   width: theadWidth + 'px'
     // }
-    // this.setState({theadWidth: tmp});
+    // this.setState({theadWidth: tmp})
   }
 
-  ComponentDidMount () {
-    console.log('ComponentDidMount...')
-    let theadWidth = ReactDOM.findDOMNode(this.refs.scrollableBody).width
-    console.log('theadWidth: ', theadWidth)
-    this.setState({theadWidth: theadWidth})
-    window.addEventListener('resize', this._handleResize);
+  componentDidMount () {
+    this._handleResize()
+    window.addEventListener('resize', this._handleResize)
   }
 
   componentWillUnmount () {
@@ -49,7 +99,6 @@ class ReactResponsiveTable extends React.Component {
     let tmp = {
       transform: 'translate3d' + '('+ -left + 'px' + ',' + '0px' + ',' + '0px' + ')'
     }
-    console.log('tmp: ', tmp)
     this.setState({
       style: tmp
     })
@@ -57,44 +106,35 @@ class ReactResponsiveTable extends React.Component {
 
   render() {
     var state = this.state
-    var rows = this.state.dataSet.map(function(data, index){
-      return (
-        <div key={index} className="tr">
-          <div className="td">{data.a}</div>
-          <div className="td">{data.b}</div>
-          <div className="td">{data.c}</div>
-          <div className="td">{data.d}</div>
-          <div className="td">{data.e}</div>
-          <div className="td">{data.f}</div>
-          <div className="td">{data.g}</div>
-          <div className="td">{data.h}</div>
-          <div className="td">{data.i}</div>
-          <div className="td">{data.j}</div>
-        </div>
-      )
-    })
     return (
-      <div className="table" style={{'maxWidth': '1424px'}}>
-        <div className="thead" style={state.theadWidth}>
-          <div className="tr" style={state.style}>
-            <div className="td">1</div>
-            <div className="td">2</div>
-            <div className="td">3</div>
-            <div className="td">4</div>
-            <div className="td">5</div>
-            <div className="td">6</div>
-            <div className="td">7</div>
-            <div className="td">8</div>
-            <div className="td">9</div>
-            <div className="td">10</div>
-          </div>
-        </div>
-        <div className="tbody" ref="scrollableBody" onScroll={this._handleScroll}>
-          {rows}
-        </div>
-      </div>
+        <Table width={this.props.width}>
+          <Thead>
+          </Thead>
+          <Tbody dataSet={this.state.dataSet}>
+            <Column width={100} dataKey="a">
+            </Column>
+            <Column width={100} dataKey="b">
+            </Column>
+            <Column width={100} dataKey="c">
+            </Column>
+            <Column width={100} dataKey="d">
+            </Column>
+            <Column width={100} dataKey="e">
+            </Column>
+            <Column width={100} dataKey="f">
+            </Column>
+            <Column width={100} dataKey="g">
+            </Column>
+            <Column width={100} dataKey="h">
+            </Column>
+            <Column width={100} dataKey="i">
+            </Column>
+            <Column width={100} dataKey="j">
+            </Column>
+          </Tbody>
+        </Table>
     )
   }
 }
 
-ReactDOM.render(<ReactResponsiveTable />, document.getElementById('container'))
+ReactDOM.render(<ReactResponsiveTable width={1350}/>, document.getElementById('container'))
