@@ -2,11 +2,17 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import './main.scss'
 
-class Table extends React.Component {
+class ReactResponsiveTable extends React.Component {
   render() {
+    var self = this
+    const childrenWithProps = React.Children.map(self.props.children,
+      (child) => React.cloneElement(child, {
+        width: self.props.width
+      })
+    )
     return (
       <div className="table" style={{maxWidth: this.props.width}}>
-        {this.props.children}
+        {childrenWithProps}
       </div>
     )
   }
@@ -15,8 +21,10 @@ class Table extends React.Component {
 class Thead extends React.Component {
   render() {
     return (
-      <div className="thead">
-        {this.props.children}
+      <div className="thead" style={{width: this.props.width}}>
+        <div className="tr">
+          {this.props.children}
+        </div>
       </div>
     )
   }
@@ -48,15 +56,16 @@ class Tbody extends React.Component {
 
 class Column extends React.Component {
   render() {
+    var content = this.props.children || this.props.value || (this.props.data ? this.props.data[this.props.dataKey] : '')
     return (
       <div className="td" style={{width: this.props.width}} dataKey={this.props.dataKey}>
-        {this.props.data[this.props.dataKey]}
+        {content}
       </div>
     )
   }
 }
 
-class ReactResponsiveTable extends React.Component {
+class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -68,7 +77,7 @@ class ReactResponsiveTable extends React.Component {
              {a: '1', b: '2', c: '3', d: '4', e: '5', f: '66666666666', g: '7', h: '8', i: '9', j: '10'},
              {a: '1', b: '2', c: '3', d: '4', e: '5', f: '6', g: '7777777777', h: '8', i: '9', j: '10'},
              {a: '1', b: '2', c: '3', d: '4', e: '5', f: '6', g: '7', h: '8888888888', i: '9', j: '10'},
-             {a: '1', b: '2', c: '3', d: '4', e: '5', f: '6', g: '7', h: '8', i: '9999999999', j: '10'},
+             {a: '1', b: '2', c: '3', d: '4', e: '5', f: '6', g: '7', h: '8', i: '999999999999999999999999999', j: '10'},
              {a: '1', b: '2', c: '3', d: '4', e: '5', f: '6', g: '7', h: '8', i: '9', j: '10101010101010101'}],
      style: {transform: 'translate3d(0px, 0px, 0px)'},
      theadWidth: {width: this.props.width}
@@ -107,8 +116,29 @@ class ReactResponsiveTable extends React.Component {
   render() {
     var state = this.state
     return (
-        <Table width={this.props.width}>
+        <ReactResponsiveTable width={1350}>
           <Thead>
+            <Column width={100}>
+              a
+            </Column>
+            <Column width={100} value="b">
+            </Column>
+            <Column width={100} value="c">
+            </Column>
+            <Column width={100} value="d">
+            </Column>
+            <Column width={100} value="e">
+            </Column>
+            <Column width={100} value="f">
+            </Column>
+            <Column width={100} value="g">
+            </Column>
+            <Column width={100} value="h">
+            </Column>
+            <Column width={100} value="i">
+            </Column>
+            <Column width={100} value="j">
+            </Column>
           </Thead>
           <Tbody dataSet={this.state.dataSet}>
             <Column width={100} dataKey="a">
@@ -132,9 +162,9 @@ class ReactResponsiveTable extends React.Component {
             <Column width={100} dataKey="j">
             </Column>
           </Tbody>
-        </Table>
+        </ReactResponsiveTable>
     )
   }
 }
 
-ReactDOM.render(<ReactResponsiveTable width={1350}/>, document.getElementById('container'))
+ReactDOM.render(<App/>, document.getElementById('container'))
