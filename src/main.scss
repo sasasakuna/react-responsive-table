@@ -16,9 +16,12 @@
 }
 
 .tbody {
-  height: 128px;
   margin-top: 18px;
   overflow: auto;
+}
+
+.tbody.desktop {
+  height: 128px;
 }
 
 .td {
