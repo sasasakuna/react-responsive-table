@@ -3,6 +3,50 @@ import ReactDOM from 'react-dom'
 import './main.scss'
 
 class ReactResponsiveTable extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+     style: {transform: 'translate3d(0px, 0px, 0px)'},
+     theadWidth: {width: this.props.width},
+     flag: true
+    }
+    this._handleScroll = this._handleScroll.bind(this)
+    this._handleResize = this._handleResize.bind(this)
+  }
+
+  _handleResize () {
+    // let theadWidth = ReactDOM.findDOMNode(this.refs.scrollableBody).offsetWidth
+    // let tmp = {
+    //   width: theadWidth + 'px'
+    // }
+    // this.setState({theadWidth: tmp})
+    if(document.documentElement.clientWidth < 1024 && this.state.flag === true) {
+      this.setState({flag: false})
+    }
+    else if(document.documentElement.clientWidth >= 1024 && this.state.flag === false){
+      this.setState({flag: true})
+    }
+  }
+
+  componentDidMount () {
+    this._handleResize()
+    window.addEventListener('resize', this._handleResize)
+  }
+
+  componentWillUnmount () {
+      window.removeEventListener('resize', this._handleResize)
+  }
+
+  _handleScroll(event) {
+    let left = ReactDOM.findDOMNode(this.refs.scrollableBody).scrollLeft
+    let tmp = {
+      transform: 'translate3d' + '('+ -left + 'px' + ',' + '0px' + ',' + '0px' + ')'
+    }
+    this.setState({
+      style: tmp
+    })
+  }
+
   render() {
     var self = this
     const childrenWithProps = React.Children.map(self.props.children,
@@ -57,7 +101,6 @@ class Tbody extends React.Component {
 class Column extends React.Component {
   render() {
     var content = this.props.children || this.props.value || (this.props.data ? this.props.data[this.props.dataKey] : '')
-    console.log('desktop');
     return (
       <div className="td" style={{width: this.props.width}} dataKey={this.props.dataKey}>
         {content}
@@ -93,126 +136,59 @@ class App extends React.Component {
              {a: '1', b: '2', c: '3', d: '4', e: '5', f: '6', g: '7', h: '8888888888', i: '9', j: '10'},
              {a: '1', b: '2', c: '3', d: '4', e: '5', f: '6', g: '7', h: '8', i: '999999999999999999999999999', j: '10'},
              {a: '1', b: '2', c: '3', d: '4', e: '5', f: '6', g: '7', h: '8', i: '9', j: '10101010101010101'}],
-     style: {transform: 'translate3d(0px, 0px, 0px)'},
-     theadWidth: {width: this.props.width},
-     flag: true
     }
-    this._handleScroll = this._handleScroll.bind(this)
-    this._handleResize = this._handleResize.bind(this)
-  }
-
-  _handleResize () {
-    // let theadWidth = ReactDOM.findDOMNode(this.refs.scrollableBody).offsetWidth
-    // let tmp = {
-    //   width: theadWidth + 'px'
-    // }
-    // this.setState({theadWidth: tmp})
-    if(document.documentElement.clientWidth < 1024 && this.state.flag === true) {
-      this.setState({flag: false})
-    }
-    else if(document.documentElement.clientWidth >= 1024 && this.state.flag === false){
-      this.setState({flag: true})
-    }
-  }
-
-  componentDidMount () {
-    this._handleResize()
-    window.addEventListener('resize', this._handleResize)
-  }
-
-  componentWillUnmount () {
-      window.removeEventListener('resize', this._handleResize)
-  }
-
-  _handleScroll(event) {
-    let left = ReactDOM.findDOMNode(this.refs.scrollableBody).scrollLeft
-    let tmp = {
-      transform: 'translate3d' + '('+ -left + 'px' + ',' + '0px' + ',' + '0px' + ')'
-    }
-    this.setState({
-      style: tmp
-    })
   }
 
   render() {
-    var state = this.state
-      if(state.flag === true) {
-        return (
-              <ReactResponsiveTable width={1350}>
-                <Thead>
-                  <Column width={100}>
-                    a
-                  </Column>
-                  <Column width={100} value="b">
-                  </Column>
-                  <Column width={100} value="c">
-                  </Column>
-                  <Column width={100} value="d">
-                  </Column>
-                  <Column width={100} value="e">
-                  </Column>
-                  <Column width={100} value="f">
-                  </Column>
-                  <Column width={100} value="g">
-                  </Column>
-                  <Column width={100} value="h">
-                  </Column>
-                  <Column width={100} value="i">
-                  </Column>
-                  <Column width={100} value="j">
-                  </Column>
-                </Thead>
-                <Tbody dataSet={this.state.dataSet} className='desktop'>
-                  <Column width={100} dataKey="a">
-                  </Column>
-                  <Column width={100} dataKey="b">
-                  </Column>
-                  <Column width={100} dataKey="c">
-                  </Column>
-                  <Column width={100} dataKey="d">
-                  </Column>
-                  <Column width={100} dataKey="e">
-                  </Column>
-                  <Column width={100} dataKey="f">
-                  </Column>
-                  <Column width={100} dataKey="g">
-                  </Column>
-                  <Column width={100} dataKey="h">
-                  </Column>
-                  <Column width={100} dataKey="i">
-                  </Column>
-                  <Column width={100} dataKey="j">
-                  </Column>
-                </Tbody>
-              </ReactResponsiveTable>
-        )
-      }
-      else {
-        return (
-          <Tbody dataSet={this.state.dataSet} className='mobile'>
-            <Cell width={100} dataKey="a">
-            </Cell>
-            <Cell width={100} dataKey="b">
-            </Cell>
-            <Cell width={100} dataKey="c">
-            </Cell>
-            <Cell width={100} dataKey="d">
-            </Cell>
-            <Cell width={100} dataKey="e">
-            </Cell>
-            <Cell width={100} dataKey="f">
-            </Cell>
-            <Cell width={100} dataKey="g">
-            </Cell>
-            <Cell width={100} dataKey="h">
-            </Cell>
-            <Cell width={100} dataKey="i">
-            </Cell>
-            <Cell width={100} dataKey="j">
-            </Cell>
-          </Tbody>
-        )
-      }
+    return (
+          <ReactResponsiveTable width={1024}>
+            <Thead>
+              <Column width={100}>
+                a
+              </Column>
+              <Column width={100} value="b">
+              </Column>
+              <Column value="c">
+              </Column>
+              <Column value="d">
+              </Column>
+              <Column value="e">
+              </Column>
+              <Column value="f">
+              </Column>
+              <Column value="g">
+              </Column>
+              <Column value="h">
+              </Column>
+              <Column value="i">
+              </Column>
+              <Column value="j">
+              </Column>
+            </Thead>
+            <Tbody dataSet={this.state.dataSet}>
+              <Column width={100} dataKey="a">
+              </Column>
+              <Column width={100} dataKey="b">
+              </Column>
+              <Column dataKey="c">
+              </Column>
+              <Column dataKey="d">
+              </Column>
+              <Column dataKey="e">
+              </Column>
+              <Column dataKey="f">
+              </Column>
+              <Column dataKey="g">
+              </Column>
+              <Column dataKey="h">
+              </Column>
+              <Column dataKey="i">
+              </Column>
+              <Column dataKey="j">
+              </Column>
+            </Tbody>
+          </ReactResponsiveTable>
+    )
   }
 }
 

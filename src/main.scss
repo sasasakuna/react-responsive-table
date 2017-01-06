@@ -1,18 +1,16 @@
 .table {
   margin: 0 auto;
-  text-align: center;
   z-index: 1;
+  position: relative;
 }
 
 .thead {
   overflow: hidden;
   z-index: 9999;
   position: absolute;
-  top: 0;
-}
-
-.thead .td {
-  background: #54B2DE;
+  top: -18px;
+  left: 0;
+  background-color: #eee;
 }
 
 .tbody {
